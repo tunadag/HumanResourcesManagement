@@ -41,6 +41,7 @@ allprojects{
         annotationProcessor libs.mapstructProcessor
         implementation libs.postgreSQL
         implementation libs.springBootDataJpa
+        implementation libs.springBootStarterSecurity
         //implementation libs.springCloudOpenFeign
         //implementation libs.jwt
         //implementation libs.springCloudStarterSleuth

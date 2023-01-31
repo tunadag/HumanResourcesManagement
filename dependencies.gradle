@@ -49,7 +49,7 @@ ext {
             //springBootStarterAmqp   : "org.springframework.boot:spring-boot-starter-amqp:${versions.springBoot}",
 
             // Spring Security
-            //springBootStarterSecurity   : "org.springframework.boot:spring-boot-starter-security:${versions.springBoot}",
+            springBootStarterSecurity   : "org.springframework.boot:spring-boot-starter-security:${versions.springBoot}",
 
     ]
 }
