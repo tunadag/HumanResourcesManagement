@@ -27,6 +27,7 @@ public class DataImpl {
                 .email("hilaler@hotmail.com")
                 .nationalId(25698103791L)
                 .photo("foto")
+                .password("1234")
                 .userType(UserType.ADMIN)
                 .build();
 
@@ -54,6 +55,7 @@ public class DataImpl {
                 .email("tunadag@hotmail.com")
                 .nationalId(32058105555L)
                 .photo("foto")
+                .password("3456")
                 .userType(UserType.PERSONAL)
                 .build();
 

@@ -11,4 +11,5 @@ public interface IRepository extends JpaRepository<Personal, Long> {
 
     Optional<Personal> findOptionalByEmail(String email);
     Optional<Personal> findOptionalByEmailAndPassword(String email, String password);
+    Optional<Personal> findOptionalById(Long id);
 }

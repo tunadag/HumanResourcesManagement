@@ -1,10 +1,13 @@
 package com.bilgeadam.service;
 
+import com.bilgeadam.dto.request.BaseRequestDto;
 import com.bilgeadam.dto.request.LoginRequestDto;
 import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.mapper.IPersonalMapper;
 import com.bilgeadam.repository.IRepository;
 import com.bilgeadam.repository.entity.Personal;
+import com.bilgeadam.repository.entity.UserType;
+import com.bilgeadam.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class HumanResourcesService {
 
     private final IRepository repository;
+    private final JwtTokenManager jwtTokenManager;
 
     public Boolean register(RegisterRequestDto dto){
         Optional<Personal> personal = repository.findOptionalByEmail(dto.getEmail());
@@ -27,20 +31,26 @@ public class HumanResourcesService {
         }
     }
 
-    public Boolean login(LoginRequestDto dto){
+    public String login(LoginRequestDto dto){
         Optional<Personal> personal = repository.findOptionalByEmailAndPassword(dto.getEmail(), dto.getPassword());
         if (personal.isEmpty()){
             throw new RuntimeException("Hatalı şifre veya eposta...");
         }else{
-            return true;
+            return jwtTokenManager.createToken(personal.get().getId()).get();
         }
     }
 
-    public List<Personal> findAll() {
-        List<Personal> personals = repository.findAll();
-        if (personals.isEmpty()){
-            throw new RuntimeException("Personel bulunamadı.");
+    public List<Personal> findAll(BaseRequestDto dto) {
+        Optional<Long> id = jwtTokenManager.getByIdFromToken(dto.getToken());
+        if (id.isEmpty()) System.out.println("Bu id de kullanıcı bulunmamaktadır.");
+        Optional<Personal> personal = repository.findOptionalById(id.get());
+        if (personal.isEmpty()){
+            System.out.println("Kullanıcı bulunamadı");
         }
-        return personals;
+        if (personal.get().getUserType() != UserType.ADMIN){
+            throw new RuntimeException("Yetkiniz bulunmamaktadır.");
+        }
+        return repository.findAll();
+
     }
 }

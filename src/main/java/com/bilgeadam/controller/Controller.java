@@ -1,5 +1,6 @@
 package com.bilgeadam.controller;
 
+import com.bilgeadam.dto.request.BaseRequestDto;
 import com.bilgeadam.dto.request.LoginRequestDto;
 import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.repository.entity.Personal;
@@ -24,12 +25,13 @@ public class Controller {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody @Valid LoginRequestDto dto){
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto dto){
         return ResponseEntity.ok(service.login(dto));
     }
 
-    @GetMapping("/findall")
-    public ResponseEntity<List<Personal>> findAll(){
-        return ResponseEntity.ok(service.findAll());
+    @PostMapping("/findall")
+    public ResponseEntity<List<Personal>> findAll(@RequestBody BaseRequestDto dto){
+
+        return ResponseEntity.ok(service.findAll(dto));
     }
 }
