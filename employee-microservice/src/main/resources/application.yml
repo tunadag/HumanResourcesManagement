@@ -1,0 +1,25 @@
+server:
+  port: 8990
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: root
+  data:
+    mongodb:
+      host: localhost
+      port: 27000
+      database: employeeDB
+      username: grup2
+      password: Aa123456
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
+      show-sql: true
+
+
+
+
+
