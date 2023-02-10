@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/auth-microservice/HumanResourcesManagement.auth-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/auth-microservice/HumanResourcesManagement.auth-microservice.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/employee-microservice/HumanResourcesManagement.employee-microservice.main.iml" filepath="$PROJECT_DIR$/.idea/modules/employee-microservice/HumanResourcesManagement.employee-microservice.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mail-service/HumanResourcesManagement.mail-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/mail-service/HumanResourcesManagement.mail-service.main.iml" />
     </modules>
   </component>
 </project>

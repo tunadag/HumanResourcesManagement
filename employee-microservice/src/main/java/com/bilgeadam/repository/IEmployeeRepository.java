@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface IEmployeeRepository extends MongoRepository<Employee, String> {
 
     Optional<Employee> findOptionalByAuthId(Long authId);
+    Optional<Employee> findOptionalByEmail(String email);
 }

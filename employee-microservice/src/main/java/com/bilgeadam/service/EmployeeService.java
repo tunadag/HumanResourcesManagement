@@ -1,13 +1,15 @@
 package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.BaseRequestDto;
-import com.bilgeadam.dto.request.CreateDirectorRequestDto;
+import com.bilgeadam.dto.request.AssignDirectorRequestDto;
 import com.bilgeadam.dto.request.NewCreateEmployeeRequestDto;
 import com.bilgeadam.dto.request.UpdateEmployeeRequestDto;
 import com.bilgeadam.dto.response.UpdateEmployeeResponseDto;
 import com.bilgeadam.exception.EmployeeMicroserviceException;
 import com.bilgeadam.exception.ErrorType;
 import com.bilgeadam.mapper.IEmployeeMapper;
+import com.bilgeadam.rabbitmq.model.AssignDirector;
+import com.bilgeadam.rabbitmq.producer.AssignDirectorProducer;
 import com.bilgeadam.repository.IEmployeeRepository;
 import com.bilgeadam.repository.entity.Employee;
 import com.bilgeadam.repository.entity.Roles;
@@ -21,10 +23,14 @@ import java.util.Optional;
 public class EmployeeService {
     private final IEmployeeRepository employeeRepository;
     private final JwtTokenManager jwtTokenManager;
+    private final AssignDirectorProducer assignDirectorProducer;
 
-    public EmployeeService(IEmployeeRepository employeeRepository, JwtTokenManager jwtTokenManager){
+    public EmployeeService(IEmployeeRepository employeeRepository, JwtTokenManager jwtTokenManager,
+                           AssignDirectorProducer assignDirectorProducer){
+        super();
         this.employeeRepository = employeeRepository;
         this.jwtTokenManager = jwtTokenManager;
+        this.assignDirectorProducer = assignDirectorProducer;
     }
 
 
@@ -83,21 +89,14 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Boolean createDirector(CreateDirectorRequestDto dto) {
-        Optional<Long> authId = jwtTokenManager.getByIdFromToken(dto.getToken());
-        if (authId.isEmpty()){
-            throw new RuntimeException("Geçersiz Token");
-        }
-        Optional<Employee> employee = employeeRepository.findOptionalByAuthId(authId.get());
-        if (employee.isEmpty()){
-            throw new RuntimeException("Çalışan bulunamadı");
-        }
-        if (employee.get().getRole() != Roles.ADMINISTRATOR){
-            throw new RuntimeException("Geçersiz giriş denemesi");
-        }
-        Optional<Employee> employeeToBeDirector = employeeRepository.findOptionalByAuthId(dto.getAuthIdToBeDirector());
+    public Boolean assignDirector(AssignDirectorRequestDto dto) {
+        Optional<Employee> employeeToBeDirector = employeeRepository.findOptionalByEmail(dto.getEmail());
         employeeToBeDirector.get().setRole(Roles.DIRECTOR);
         employeeRepository.save(employeeToBeDirector.get());
+        assignDirectorProducer.convertAndSendMessageAssignDirector(AssignDirector.builder()
+                        .email(employeeToBeDirector.get().getEmail())
+                        .role(employeeToBeDirector.get().getRole())
+                .build());
         return true;
     }
 

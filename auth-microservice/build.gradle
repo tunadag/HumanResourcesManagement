@@ -7,5 +7,6 @@ dependencies {
     implementation libs.springBootDataJpa
     implementation libs.postgreSQL
     implementation libs.springBootStarterAmqp
+    implementation libs.springBootStarterSecurity
 
 }

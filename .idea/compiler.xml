@@ -12,6 +12,7 @@
         <module name="HumanResourcesManagement.company-microservice.main" />
         <module name="HumanResourcesManagement.main" />
         <module name="HumanResourcesManagement.employee-microservice.main" />
+        <module name="HumanResourcesManagement.mail-service.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="17" />

@@ -1,6 +1,5 @@
 package com.bilgeadam.manager;
-
-import com.bilgeadam.dto.request.CreateDirectorRequestDto;
+/*
 import com.bilgeadam.dto.request.NewCreateEmployeeRequestDto;
 import com.bilgeadam.repository.entity.Employee;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -20,6 +19,7 @@ public interface IEmployeeManager {
     @GetMapping("/findall")
     public ResponseEntity<List<Employee>> findAll();
 
-    @PostMapping("/createdirector")
-    public ResponseEntity<Boolean> createDirector(@RequestBody CreateDirectorRequestDto dto);
+
+
 }
+*/

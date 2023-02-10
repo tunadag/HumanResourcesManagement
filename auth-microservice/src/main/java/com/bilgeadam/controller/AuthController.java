@@ -1,17 +1,16 @@
 package com.bilgeadam.controller;
 
-import com.bilgeadam.dto.request.BaseRequestDto;
-import com.bilgeadam.dto.request.CreateDirectorRequestDto;
 import com.bilgeadam.dto.request.LoginRequestDto;
 import com.bilgeadam.dto.request.RegisterRequestDto;
-import com.bilgeadam.repository.entity.Employee;
 import com.bilgeadam.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -29,14 +28,11 @@ public class AuthController {
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequestDto dto){
         return ResponseEntity.ok(service.login(dto));
     }
-
+/*
     @PostMapping("/findall")
     public ResponseEntity<List<Employee>> findAll(@RequestBody BaseRequestDto dto){
         return ResponseEntity.ok(service.findAll(dto));
     }
+ */
 
-    @PostMapping("/createdirector")
-    public ResponseEntity<Boolean> createDirector(@RequestBody CreateDirectorRequestDto dto){
-        return ResponseEntity.ok(service.createDirector(dto));
-    }
 }

@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
 
     private String exchangeAuth = "exchange-auth";
+
     private String keyAuth = "key-auth";
     private String queueAuth = "queue-auth-create-employee";
+
+    private String keyMail = "key-mail";
+    private String queueMail = "queue-auth-mail";
 
     @Bean
     DirectExchange exchangeAuth(){return new DirectExchange(exchangeAuth);}
@@ -21,8 +25,16 @@ public class RabbitConfig {
     Queue queueCreateEmployee(){return new Queue(queueAuth);}
 
     @Bean
+    Queue queueMail(){return new Queue(queueMail);}
+
+    @Bean
     public Binding bindingCreateEmployee(final Queue queueCreateEmployee, final DirectExchange exchangeAuth){
         return BindingBuilder.bind(queueCreateEmployee).to(exchangeAuth).with(keyAuth);
+    }
+
+    @Bean
+    public Binding bindingMail(final Queue queueMail, final DirectExchange exchangeAuth){
+        return BindingBuilder.bind(queueMail).to(exchangeAuth).with(keyMail);
     }
 
 }

@@ -1,46 +1,68 @@
 package com.bilgeadam.service;
 
-import com.bilgeadam.dto.request.*;
+import com.bilgeadam.dto.request.AssignDirectorRequestDto;
+import com.bilgeadam.dto.request.LoginRequestDto;
+import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.exception.AuthMicroserviceException;
 import com.bilgeadam.exception.ErrorType;
-import com.bilgeadam.manager.IEmployeeManager;
 import com.bilgeadam.mapper.IAuthMapper;
+import com.bilgeadam.rabbitmq.model.CreateEmployee;
+import com.bilgeadam.rabbitmq.model.SendEmailPassword;
+import com.bilgeadam.rabbitmq.producer.CreateEmployeeProducer;
+import com.bilgeadam.rabbitmq.producer.EmailProducer;
 import com.bilgeadam.repository.IAuthRepository;
 import com.bilgeadam.repository.entity.Auth;
-import com.bilgeadam.repository.entity.Employee;
-import com.bilgeadam.repository.entity.Roles;
 import com.bilgeadam.utility.JwtTokenManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
 public class AuthService {
 
-    private final IAuthRepository repository;
+    private final IAuthRepository authRepository;
+ //   private final IEmployeeManager employeeManager;
     private final JwtTokenManager jwtTokenManager;
-    private final IEmployeeManager employeeManager;
+    private final CreateEmployeeProducer createEmployeeProducer;
+    private final EmailProducer emailProducer;
+
+    public AuthService(IAuthRepository authRepository, //IEmployeeManager employeeManager,
+                       JwtTokenManager jwtTokenManager, CreateEmployeeProducer createEmployeeProducer, EmailProducer emailProducer){
+        super();
+        this.authRepository = authRepository;
+ //       this.employeeManager = employeeManager;
+        this.jwtTokenManager = jwtTokenManager;
+        this.createEmployeeProducer = createEmployeeProducer;
+        this.emailProducer = emailProducer;
+    }
+
 
     public Boolean register(RegisterRequestDto dto){
-        Optional<Auth> personal = repository.findOptionalByEmail(dto.getEmail());
+        Optional<Auth> personal = authRepository.findOptionalByEmail(dto.getEmail());
         if (personal.isPresent()){
             throw new AuthMicroserviceException(ErrorType.REGISTER_EMAIL_KAYITLI);
         }else{
-            Auth auth = repository.save(IAuthMapper.INSTANCE.fromRegisterRequestDto(dto));
-            employeeManager.createEmployee(NewCreateEmployeeRequestDto.builder()
+            Auth auth = authRepository.save(IAuthMapper.INSTANCE.fromRegisterRequestDto(dto));
+            createEmployeeProducer.convertAndSendMessageCreateEmployee(CreateEmployee.builder()
                             .authId(auth.getId())
                             .email(auth.getEmail())
                             .role(auth.getRoles())
                     .build());
+            emailProducer.sendPassword(SendEmailPassword.builder()
+                            .email(auth.getEmail())
+                            .password(auth.getPassword())
+                    .build());
+//            employeeManager.createEmployee(NewCreateEmployeeRequestDto.builder()
+//                            .authId(auth.getId())
+//                            .email(auth.getEmail())
+//                            .role(auth.getRoles())
+//                    .build());
             return true;
         }
     }
 
     public String login(LoginRequestDto dto){
-        Optional<Auth> personal = repository.findOptionalByEmailAndPassword(dto.getEmail(), dto.getPassword());
+        Optional<Auth> personal = authRepository.findOptionalByEmailAndPassword(dto.getEmail(), dto.getPassword());
         if (personal.isEmpty()){
             throw new AuthMicroserviceException(ErrorType.LOGIN_ERROR);
         }
@@ -51,31 +73,21 @@ public class AuthService {
         return token.get();
     }
 
-    public Boolean createDirector(CreateDirectorRequestDto dto) {
-        Optional<Long> authId = jwtTokenManager.getByIdFromToken(dto.getToken());
-        if (authId.isEmpty()){
-            throw new RuntimeException("Geçersiz Token");
-        }
-        Optional<Auth> auth = repository.findOptionalById(authId.get());
-        if (auth.isEmpty()){
-            throw new RuntimeException("Çalışan bulunamadı");
-        }
-        if (auth.get().getRoles() != Roles.ADMINISTRATOR){
-            throw new RuntimeException("Geçersiz giriş denemesi");
-        }
-        Optional<Auth> authToBeDirector = repository.findOptionalById(dto.getAuthIdToBeDirector());
-        authToBeDirector.get().setRoles(Roles.DIRECTOR);
-        repository.save(authToBeDirector.get());
-        employeeManager.createDirector(dto);
+    public Boolean assignDirector(AssignDirectorRequestDto dto) {
+        Optional<Auth> authToBeDirector = authRepository.findOptionalByEmail(dto.getEmail());
+        authToBeDirector.get().setRoles(dto.getRole());
+        authRepository.save(authToBeDirector.get());
         return true;
     }
 
+
+/*
     public List<Employee> findAll(BaseRequestDto dto) {
         Optional<Long> id = jwtTokenManager.getByIdFromToken(dto.getToken());
         if (id.isEmpty()){
             throw new AuthMicroserviceException(ErrorType.GECERSIZ_GIRIS_DENEMESI);
         }
-        Optional<Auth> personal = repository.findOptionalById(id.get());
+        Optional<Auth> personal = authRepository.findOptionalById(id.get());
         if (personal.isEmpty()){
             throw new AuthMicroserviceException(ErrorType.GECERSIZ_GIRIS_DENEMESI);
         }
@@ -85,6 +97,8 @@ public class AuthService {
         List<Employee> employees = employeeManager.findAll().getBody();
         return employees;
     }
+
+ */
 
 /*
     public Boolean updateAddress(Long id, String address){

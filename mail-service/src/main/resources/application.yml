@@ -1,0 +1,40 @@
+server:
+  port: 8991
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: root
+  mail:
+    username: ${mailserviceusername}
+    password: ${mailservicepassword}
+    host: ${mailservicehost}
+    port: ${mailserviceport}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

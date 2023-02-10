@@ -1,7 +1,7 @@
 package com.bilgeadam.controller;
 
 import com.bilgeadam.dto.request.BaseRequestDto;
-import com.bilgeadam.dto.request.CreateDirectorRequestDto;
+import com.bilgeadam.dto.request.AssignDirectorRequestDto;
 import com.bilgeadam.dto.request.NewCreateEmployeeRequestDto;
 import com.bilgeadam.dto.request.UpdateEmployeeRequestDto;
 import com.bilgeadam.dto.response.UpdateEmployeeResponseDto;
@@ -41,8 +41,8 @@ public class EmployeeController {
     }
 
     @PostMapping("/createdirector")
-    public ResponseEntity<Boolean> createDirector(@RequestBody CreateDirectorRequestDto dto){
-        return ResponseEntity.ok(employeeService.createDirector(dto));
+    public ResponseEntity<Boolean> createDirector(@RequestBody AssignDirectorRequestDto dto){
+        return ResponseEntity.ok(employeeService.assignDirector(dto));
     }
 
 

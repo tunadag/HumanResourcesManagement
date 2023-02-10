@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateDirectorRequestDto {
-    String token;
-    Long authIdToBeDirector;
+public class AssignDirectorRequestDto {
+    String email;
 }
