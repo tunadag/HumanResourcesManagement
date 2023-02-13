@@ -58,6 +58,7 @@ public class EmployeeService {
         employee.get().setSurname(dto.getSurname());
         employee.get().setPhoto(dto.getPhoto());
         employee.get().setUpdatedDate(System.currentTimeMillis());
+        employee.get().setDirectorId(dto.getDirectorId());
         employeeRepository.save(employee.get());
         return IEmployeeMapper.INSTANCE.toUpdateResponseDto(employee.get());
     }

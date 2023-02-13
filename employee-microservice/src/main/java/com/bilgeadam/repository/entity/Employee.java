@@ -22,6 +22,7 @@ public class Employee implements Serializable {
     private String id;
     @Indexed(unique = true)
     private Long authId;
+    private Long directorId;
     @Indexed(unique = true)
     private String email;
     private String password;

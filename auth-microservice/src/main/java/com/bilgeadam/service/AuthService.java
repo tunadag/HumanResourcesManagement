@@ -2,6 +2,7 @@ package com.bilgeadam.service;
 
 import com.bilgeadam.dto.request.AssignDirectorRequestDto;
 import com.bilgeadam.dto.request.LoginRequestDto;
+import com.bilgeadam.dto.request.NewPasswordRequestDto;
 import com.bilgeadam.dto.request.RegisterRequestDto;
 import com.bilgeadam.exception.AuthMicroserviceException;
 import com.bilgeadam.exception.ErrorType;
@@ -25,6 +26,7 @@ public class AuthService {
     private final JwtTokenManager jwtTokenManager;
     private final CreateEmployeeProducer createEmployeeProducer;
     private final EmailProducer emailProducer;
+
 
     public AuthService(IAuthRepository authRepository, //IEmployeeManager employeeManager,
                        JwtTokenManager jwtTokenManager, CreateEmployeeProducer createEmployeeProducer, EmailProducer emailProducer){
@@ -78,6 +80,23 @@ public class AuthService {
         authToBeDirector.get().setRoles(dto.getRole());
         authRepository.save(authToBeDirector.get());
         return true;
+    }
+
+    public Optional<Auth> findById(Long authId) {
+        Optional<Auth> auth = authRepository.findById(authId);
+        return auth;
+    }
+
+    public void forgotMyPassword(NewPasswordRequestDto dto){
+        Optional<Auth> auth = authRepository.findOptionalByEmail(dto.getEmail());
+        if (auth.isPresent()){
+            emailProducer.sendPassword(SendEmailPassword.builder()
+                    .email(auth.get().getEmail())
+                    .password(auth.get().getPassword())
+                    .build());
+        } else {
+            throw new AuthMicroserviceException(ErrorType.KULLANICI_BULUNAMADI);
+        }
     }
 
 

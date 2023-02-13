@@ -21,14 +21,15 @@ public class AuthMicroserviceSecurityConfig {
         httpSecurity.csrf().disable();
 
         httpSecurity.authorizeRequests()
-                .antMatchers(/*"/v3/api-docs/**",
+                .antMatchers("/v3/api-docs/**",
          "/swagger-ui/**","/auth/login"
-         ,"/auth/register"*/).permitAll()
+         //"/auth/register"
+                        ).permitAll()
                 .anyRequest().authenticated();
 
         httpSecurity.addFilterBefore(getJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
- //       httpSecurity.formLogin();
+        httpSecurity.formLogin();
         return httpSecurity.build();
     }
 }

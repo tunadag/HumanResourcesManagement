@@ -15,5 +15,6 @@ public class UpdateEmployeeResponseDto {
     String telephone;
     String surname;
     String photo;
+    Long directorId;
     Long updatedDate;
 }

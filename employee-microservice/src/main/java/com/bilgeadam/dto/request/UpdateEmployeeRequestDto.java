@@ -18,4 +18,5 @@ public class UpdateEmployeeRequestDto implements Serializable {
     String telephone;
     String surname;
     String photo;
+    Long directorId;
 }
