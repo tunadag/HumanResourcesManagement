@@ -7,6 +7,15 @@ spring:
     port: 5672
     username: root
     password: root
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/RequestDB
+    username: postgres
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
   data:
     mongodb:
       host: localhost
@@ -14,10 +23,7 @@ spring:
       database: employeeDB
       username: grup2
       password: Aa123456
-    jpa:
-      hibernate:
-        ddl-auto: create-drop
-      show-sql: true
+
 
 
 

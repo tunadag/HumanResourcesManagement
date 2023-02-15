@@ -42,4 +42,5 @@ public class Employee implements Serializable {
     private String companyId;
     private Long createdDate;
     private Long updatedDate;
+    private Double salary;
 }

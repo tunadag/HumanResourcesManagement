@@ -11,17 +11,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@Table
 @Entity
-@Table(name = "tbl_leave")
-public class Leave extends Request {
+public class Allowance extends Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long leaveId;
+    private Long allowanceId;
     private Long authId;
-    @Enumerated(EnumType.STRING)
-    private LeaveType leaveType;
-    private String startDate;
-    private String endDate;
-    private String leaveRequestText;
-    private Long leaveDay;
+    private String allowanceType;
+    private Double amount;
+    private String currency;
 }

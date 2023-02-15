@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateLeaveRequestDto {
-    private Long employeeId;
+public class LeaveRequestDto {
+    private Long authId;
     private LeaveType leaveType;
-    private Long startDate;
-    private Long endDate;
+    private String startDate;
+    private String endDate;
     private String leaveRequestText;
 }
